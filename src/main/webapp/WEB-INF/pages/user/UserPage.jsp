@@ -19,10 +19,6 @@
         loadUsers();
     });
     
-    function openNewUserPopup(){
-        alert("openNewUserPopup");
-    }
-    
     function loadUsers(){
         $.ajax({
             type: "GET",
@@ -198,7 +194,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <div id="captchaDiv"><img id="captchaImg" src="<c:url value="captcha" />" height="50" width="100"/></div>
+                        
                     </td>
                     <!--td>
                         <button onclick="changeCaptchaImage();">Yenile</button>
@@ -213,7 +209,7 @@
                     </td>
                 </tr>
             </table>
-        </div>
+        </div><div id="captchaDiv"><img id="captchaImg" src="<c:url value="captcha" />" height="50" width="100"/></div>
         <div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div>
     </center>  
 </body>  
