@@ -30,11 +30,11 @@ public class CaptchaProducer {
 			
 			char mC = Captcha.AVAILABLES.charAt(r);
 			
-			//Add to Builder
+			//Builder'a
 			captchaBuilder.append(mC);				
 		}
 		
-		//Add to image
+		//Image'a
 		Graphics2D g = (Graphics2D) captchaImage.getGraphics();
 		
 		g.setColor(Color.BLACK);	
@@ -42,7 +42,7 @@ public class CaptchaProducer {
 		
 		g.setColor(Color.WHITE);	
 		
-                //Resmi karistir ki image processorlarin cozmesi mumkun olmasin
+                //Resmi karistir
 		//Capraz cizgiler
                 g.drawLine(0, 0, imageWidth, imageHeight);
 		
@@ -59,7 +59,7 @@ public class CaptchaProducer {
 		
 		g.setFont(font);
 		
-                //FontMetrics ile ortalanabilir fakat hardcode gecildi.
+                //TODO : FontMetrics ile ortalanabilir. Hardcode gecildi.
 		g.drawString(captchaBuilder.toString(), 15, 30);
 		
 		captcha.setCaptchaImage(captchaImage);
