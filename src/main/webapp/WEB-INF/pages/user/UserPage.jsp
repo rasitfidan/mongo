@@ -13,11 +13,13 @@
     <script>   
         $(document).ready(function(){
             $(document).ajaxStart(function(){
-              $("#wait").css("display","block");
+                $(".loader").show();
+              //$("#wait").css("display","block");
             });
 
             $(document).ajaxComplete(function(){
-              $("#wait").css("display","none");
+                $(".loader").hide();
+              //$("#wait").css("display","none");
             });
 
             loadUsers();
@@ -72,24 +74,40 @@
                     //Buttonlar
                     var td4 = document.createElement("TD");
 
-                    var buttonUpdate = document.createElement("BUTTON");
+                    var buttonUpdate = document.createElement("INPUT");
 
-                    buttonUpdate.appendChild(document.createTextNode("Guncelle")) ;  
+                    buttonUpdate.setAttribute("type","image");
+                    
+                    buttonUpdate.setAttribute("alt","Guncelle");
+                    
+                    buttonUpdate.setAttribute("src","resources/img/edit.png");
 
                     buttonUpdate.setAttribute("onclick","newOrUpdateUserPopupOpen('"+user.id+"','"+user.name+"','"+user.surname+"','"+user.telNo+"');");
 
+                    buttonUpdate.setAttribute("width","30");
+                    
+                    buttonUpdate.setAttribute("height","30");
+                    
                     td4.appendChild(buttonUpdate);
 
                     tRow.appendChild(td4);
 
                     var td5 = document.createElement("TD");
 
-                    var buttonDelete = document.createElement("BUTTON");
+                    var buttonDelete = document.createElement("INPUT");
 
-                    buttonDelete.appendChild(document.createTextNode("Sil")) ;  
+                    buttonDelete.setAttribute("type","image");
+                    
+                    buttonDelete.setAttribute("alt","Sil");
+                    
+                    buttonDelete.setAttribute("src","resources/img/delete.png");
 
                     buttonDelete.setAttribute("onclick","deleteUser('"+user.id+"');");
 
+                    buttonDelete.setAttribute("width","25");
+                    
+                    buttonDelete.setAttribute("height","25");
+                    
                     td5.appendChild(buttonDelete);
 
                     tRow.appendChild(td5);
@@ -111,6 +129,7 @@
             
             var action = null;
             var winTitle = null;
+            var m_captcha = null;
             //update
             if(m_id!==null && m_id !=="") {
                 action = "user/update";
@@ -122,31 +141,64 @@
             
             setNewValues(m_id,m_name,m_surname,m_telNo);
             
-            $(function() {
-                $( "#persistmodaldialog" ).dialog({
-                    height: 400,
-                    width: 450,
-                    modal: true,
-                    title : winTitle,
-                    buttons: {
-                        "Kaydet": function() {                            
-                           alert($('#userId').val());
+            $( "#persistmodaldialog" ).dialog({
+                height: 400,
+                width: 500,
+                modal: true,
+                title : winTitle,
+                buttons: {
+                    "Kaydet": function() {      
+                        m_name = $('#name').val();
+                        m_surname = $('#surname').val();
+                        m_telNo = $('#telNo').val();
+
+                        m_captcha = $('#captcha').val();
+
+                       var errorMessages = "";
+
+                       if(m_name==="") {
+                          errorMessages+="<li>Isim</li>"; 
+                       }
+
+                       if(m_surname==="") {
+                          errorMessages+="<li>Soyisim</li>"; 
+                       }
+
+                       if(m_captcha==="" && (m_id===null || m_id ==="")) {
+                          errorMessages+="<li>Captcha</li>"; 
+                       }
+
+
+                       if(errorMessages!==""){
+                           var dialogErrPane = document.getElementById("persistModalDialogErrorPane");
+
+                           dialogErrPane.innerHTML= "<p>Asagidaki alanlar zorunludur</p>" +
+                                                    "<ul>"+
+                                                        errorMessages+
+                                                    "</ul>";
+
+                            dialogErrPane.style.display="block";
+
+                            $(this).height(380);
+                       } else {
                             $.ajax({
-                                type: "POST",
-                                dataType: "json",
-                                url: action,
-                                data: { userid : m_id, name: m_name, surname: m_surname , telNo : m_telNo },
-                                success: function (reqResult) {
-                                    //postDelete(reqResult);                                    
-                                    $( this ).dialog( "close" );
-                                }
-                            });
-                        },
-                        "Iptal": function() {
-                            $( this ).dialog( "close" );
+                                 type: "POST",
+                                 dataType: "json",
+                                 url: action,
+                                 data: { userid : m_id, name: m_name, surname: m_surname , telNo : m_telNo ,captcha : m_captcha},
+                                 success : function (reqResult) {
+                                     if(reqResult.successfull){
+                                         loadUsers();
+                                         $( "#persistmodaldialog" ).dialog("close");
+                                     }
+                                 }
+                             });
                         }
+                    },
+                    "Iptal": function() {
+                        $( this ).dialog( "close" );
                     }
-                });
+                }
             });
         }
         
@@ -156,35 +208,44 @@
             $('#surname').val(m_surname);
             $('#telNo').val(m_telNo);
             
+            $('#captcha').val("");
+            
             changeCaptchaImage();
+            
+            var dialogErrPane = document.getElementById("persistModalDialogErrorPane");
+                               
+            dialogErrPane.innerHTML= "";
+                                                    
+            dialogErrPane.style.display="none";
         }
         
         function deleteUser(m_id){
-            $(function() {
-                $( "#deleteconfirm" ).dialog({
-                    resizable: false,
-                    height:200,
-                    width: 450,
-                    modal: true,
-                    buttons: {
-                        "Evet,Sil!": function() {
-                            $.ajax({
-                                type: "POST",
-                                dataType: "json",
-                                url: "user/delete",
-                                data: { userid : m_id},
-                                success: function (reqResult) {
-                                    //postDelete(reqResult);                                    
-                                    $( this ).dialog( "close" );
+            $( "#deleteconfirm" ).dialog({
+                resizable: false,
+                height:200,
+                width: 450,
+                modal: true,
+                title: "Kullanici Silme",
+                buttons: {
+                    "Evet,Sil!": function() {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: "user/delete",
+                            data: { userid : m_id},
+                            success : function (reqResult) {                                
+                                if(reqResult.successfull){
+                                    loadUsers();
+                                    $( "#deleteconfirm" ).dialog("close");
                                 }
-                            });
-                        },
-                        "Iptal": function() {
-                            $( this ).dialog( "close" );
-                        }
+                            }
+                        });
+                    },
+                    "Iptal": function() {
+                        $( this ).dialog( "close" );
                     }
-                });
-           });
+                }
+            });
         }
         
         function changeCaptchaImage(){
@@ -226,31 +287,34 @@
             </table>
         </div>
         <div id="persistmodaldialog" style="display:none;">
+            <div id="persistModalDialogErrorPane" style="display:none;" class="warning">
+            
+            </div>
             <table>
                 <tr>
                     <td>
-                        Isim
+                        <label for="name">Isim</label>
                     </td>
                     <td>
                         <input type="hidden" id="userId" name="userId"/>
-                        <input type="text" id="name" name="name"/>
+                        <input type="text" id="name" name="name" required="true"/>
                     </td>
                 </tr>
                 
                 <tr>
                     <td>
-                        Soyisim
+                        <label for="surname">Soyisim</label>                        
                     </td>
                     <td>
-                        <input type="text" id="surname" name="surname"/>
+                        <input type="text" id="surname" name="surname" required="true"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Telefon
+                        <label for="telNo">Telefon</label>
                     </td>
                     <td>
-                        <input type="text" id="telNo" name="telNo"/>
+                        <input type="text" id="telNo" name="telNo" pattern="[0-9]{11}"/>
                     </td>
                 </tr>
                 <tr>
@@ -258,7 +322,7 @@
                         Asagida ne yaziyor?
                     </td>
                     <td>
-                        <input type="text" name="captcha"/>
+                        <input type="text" id="captcha" name="captcha" required="true"/>
                     </td>
                 </tr>
                 <tr>
@@ -278,7 +342,8 @@
         <div id="deleteconfirm" title="Kullanici Silme" style="display:none;">
             <p></span>Kullaniciyi silmek istediginizden emin misiniz?</p>
         </div>
-        <div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div>
+        <div class="loader"></div>
+        <!--div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div-->
     </center>  
 </body>  
 </html> 

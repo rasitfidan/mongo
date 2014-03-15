@@ -30,7 +30,6 @@ public class UserController {
         private UserDao userDao;
         
 	@RequestMapping("/user/create")
-        
 	public ModelAndView add(HttpServletRequest request,
 		HttpServletResponse response){
             RequestResult result = new RequestResult();
@@ -62,27 +61,44 @@ public class UserController {
             return modelAndView;
  
 	}
+ 	@RequestMapping("/user/update")
+	public ModelAndView update(HttpServletRequest request,
+		HttpServletResponse response) throws Exception {
+ 
+            RequestResult result = new RequestResult();
+            
+            String userid = request.getParameter("userid");
+            String name = request.getParameter("name");
+            String surname = request.getParameter("surname");
+            String telNo = request.getParameter("telNo");
+            
+            userDao.updateUser(userid, name, surname, telNo);
+
+            result.setSuccessfull(true);
+            result.addMessage("success", "Sonuc basarili.");
+                
+            ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
+            
+            modelAndView.addObject(JSONText, result.toJSONString());
+            
+            return modelAndView;
+	}
  
 	@RequestMapping("/user/delete")
 	public ModelAndView delete(HttpServletRequest request,
 		HttpServletResponse response) throws Exception {
- 
+            RequestResult result = new RequestResult();
             String userid = request.getParameter("userid");
             
-            //userDao.deleteUserById(userid);
+            userDao.deleteUserById(userid);
             
-            System.out.println("delete user");
-	    
-            return new ModelAndView("ajax/AjaxResult");
- 
-	}
- 
-	@RequestMapping("/user/update")
-	public ModelAndView update(HttpServletRequest request,
-		HttpServletResponse response) throws Exception {
- 
-		return new ModelAndView("CustomerUpdateView");
- 
+            result.setSuccessfull(true);
+           result.addMessage("success", "Sonuc basarili.");
+                
+            ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
+            
+            modelAndView.addObject(JSONText, result.toJSONString());
+            return modelAndView;
 	}
  
 	@RequestMapping("/user/list")
