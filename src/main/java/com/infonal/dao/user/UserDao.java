@@ -52,6 +52,15 @@ public class UserDao {
         return true;
         
     }
+    
+    public boolean deleteUserById(String id){
+        User user = this.findUserById(id);
+        
+        deleteUser(user);
+        
+        return true;
+        
+    }
     private void checkDB() {
         if (!mongoOperations.collectionExists(User.class)) {
             mongoOperations.createCollection(User.class);

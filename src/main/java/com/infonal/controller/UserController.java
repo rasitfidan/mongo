@@ -30,6 +30,7 @@ public class UserController {
         private UserDao userDao;
         
 	@RequestMapping("/user/create")
+        
 	public ModelAndView add(HttpServletRequest request,
 		HttpServletResponse response){
             RequestResult result = new RequestResult();
@@ -66,7 +67,13 @@ public class UserController {
 	public ModelAndView delete(HttpServletRequest request,
 		HttpServletResponse response) throws Exception {
  
-		return new ModelAndView("CustomerDeleteView");
+            String userid = request.getParameter("userid");
+            
+            //userDao.deleteUserById(userid);
+            
+            System.out.println("delete user");
+	    
+            return new ModelAndView("ajax/AjaxResult");
  
 	}
  

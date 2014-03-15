@@ -5,6 +5,7 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
     <link rel="stylesheet" href="<c:url value="resources/css/jquery-ui.css" />">
+    <link rel="stylesheet" href="<c:url value="resources/css/style.css" />">
     <script type="text/javascript" src="<c:url value="resources/js/jquery.js" />"></script>
     <script type="text/javascript" src="<c:url value="resources/js/jquery-ui.js" />"></script>
 
@@ -106,51 +107,110 @@
             }
         }
 
-        function newOrUpdateUserPopupOpen(id,name,surname,telNo) {
+        function newOrUpdateUserPopupOpen(m_id,m_name,m_surname,m_telNo) {
             
             var action = null;
+            var winTitle = null;
             //update
-            if(id!==null && id !=="") {
+            if(m_id!==null && m_id !=="") {
                 action = "user/update";
+                winTitle = "Kullanici Guncelleme";
             } else {
                 action = "user/create";
+                winTitle = "Kullanici Tanimlama";
             }
             
-            changeCaptchaImage();
+            setNewValues(m_id,m_name,m_surname,m_telNo);
             
             $(function() {
-                $( "#modaldialog" ).dialog({
-                    height: 300,
+                $( "#persistmodaldialog" ).dialog({
+                    height: 400,
                     width: 450,
-                    modal: true
+                    modal: true,
+                    title : winTitle,
+                    buttons: {
+                        "Kaydet": function() {                            
+                           alert($('#userId').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: "json",
+                                url: action,
+                                data: { userid : m_id, name: m_name, surname: m_surname , telNo : m_telNo },
+                                success: function (reqResult) {
+                                    //postDelete(reqResult);                                    
+                                    $( this ).dialog( "close" );
+                                }
+                            });
+                        },
+                        "Iptal": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
                 });
             });
         }
         
-        function deleteUser(id){
-
+        function setNewValues(m_id,m_name,m_surname,m_telNo) {
+            $('#userId').val(m_id);
+            $('#name').val(m_name);
+            $('#surname').val(m_surname);
+            $('#telNo').val(m_telNo);
+            
+            changeCaptchaImage();
+        }
+        
+        function deleteUser(m_id){
+            $(function() {
+                $( "#deleteconfirm" ).dialog({
+                    resizable: false,
+                    height:200,
+                    width: 450,
+                    modal: true,
+                    buttons: {
+                        "Evet,Sil!": function() {
+                            $.ajax({
+                                type: "POST",
+                                dataType: "json",
+                                url: "user/delete",
+                                data: { userid : m_id},
+                                success: function (reqResult) {
+                                    //postDelete(reqResult);                                    
+                                    $( this ).dialog( "close" );
+                                }
+                            });
+                        },
+                        "Iptal": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+           });
         }
         
         function changeCaptchaImage(){
             document.getElementById("captchaDiv").innerHTML="<img id='captchaImg' src='<c:url value="captcha?" />"+Math.random()+"' height='50' width='100'/>";
         }
+        
+        
 </script>
 
 </head>  
 <body>  
       
     <center>  
-        <div id="userListDiv">  
-            <h2>Kullanici Yonetimi</h2>  
-            <table style="width: 500px">
+        <div id="userListDiv">
+            <table>
+                <caption>Kullanici Yonetimi</caption>
                 <tr>            
                     <td>    
-                        <table id="userTable" style="width:500px">
+                        <table id="userTable">
                              <thead>
                                 <tr>
                                    <th>Isim</th>
-                                   <th>Soy Isim</th>
+                                   <th>Soyisim</th>
                                    <th>Telefon</th>
+                                   <th></th>
+                                   <th></th>
                                 </tr>
                              </thead>
                              <tbody>
@@ -160,12 +220,12 @@
                 </tr>
                 <tr>            
                     <td>
-                        <button onclick="newOrUpdateUserPopupOpen()">Yeni Kullanici</button> 
+                        <button onclick="newOrUpdateUserPopupOpen(null,null,null,null)">Yeni Kullanici</button> 
                     <td>
                 </tr>            
             </table>
         </div>
-        <div id="modaldialog" style="display:none;">
+        <div id="persistmodaldialog" style="display:none;">
             <table>
                 <tr>
                     <td>
@@ -179,7 +239,7 @@
                 
                 <tr>
                     <td>
-                        Soy Isim
+                        Soyisim
                     </td>
                     <td>
                         <input type="text" id="surname" name="surname"/>
@@ -203,22 +263,20 @@
                 </tr>
                 <tr>
                     <td>
-                        
                     </td>
                     <td>
-                        <div id="captchaDiv"><img id="captchaImg" src="<c:url value="captcha" />" height="50" width="100"/></div>
-                        <button onclick="changeCaptchaImage();">Yenile</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="saveButton" onclick="saveUser();">Kaydet</button>
-                    </td>
-                    <td>
-                         <button id="saveButton" onclick="closePopup();">Kapat</button>
+                        <table>
+                            <tr>
+                                <td><div id="captchaDiv"><img id="captchaImg" src="<c:url value="captcha" />" height="50" width="100"/></div></td>
+                                <td><input type="image" src="resources/img/refreshIcon.png" onclick="changeCaptchaImage();"  width="40" height="32"/></td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
+        </div>
+        <div id="deleteconfirm" title="Kullanici Silme" style="display:none;">
+            <p></span>Kullaniciyi silmek istediginizden emin misiniz?</p>
         </div>
         <div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div>
     </center>  
