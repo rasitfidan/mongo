@@ -23,22 +23,22 @@ public class UserDao {
     @Autowired
     MongoOperations mongoOperations;
     
-    public boolean createUser(User user){
+    public void createUser(User user){
         checkDB();
 
         mongoOperations.insert(user);
         
-        return true;
-        
     }
 
-    public boolean updateUser(String uid,String name,String surname,String telNo){
-        Query query = new Query();
-	
-        query.addCriteria(Criteria.where("id").is(uid));
-	query.fields().include("id");
+    public void updateUser(User user){
+        checkDB();
+        mongoOperations.save(user);
+    }
+    
+    public void updateUser(String uid,String name,String surname,String telNo){
+        User user = new User();
         
-        User user = mongoOperations.findOne(query, User.class);
+        user.setId(uid);
 	
         user.setName(name);
 
@@ -46,9 +46,7 @@ public class UserDao {
 
         user.setTelNo(telNo);
  
-        mongoOperations.save(user);
-        
-        return true;
+        updateUser(user);
     }
     
     
@@ -68,19 +66,16 @@ public class UserDao {
         return results;
     }
     
-    public boolean deleteUser(User user){
+    public void deleteUser(User user){
+        checkDB();
         mongoOperations.remove(user);
-        
-        return true;
         
     }
     
-    public boolean deleteUserById(String id){
+    public void deleteUserById(String id){
         User user = this.findUserById(id);
         
         deleteUser(user);
-        
-        return true;
         
     }
     private void checkDB() {

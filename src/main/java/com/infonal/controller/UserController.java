@@ -45,13 +45,17 @@ public class UserController {
             
             if(captchaParam.equals(captchaValue)){
                 User user = new User(name,surname,telNo);
-                userDao.createUser(user);
-                
-                result.setSuccessfull(true);
-                result.addMessage("success", "Sonuc basarili.");
+                try{
+                    userDao.createUser(user);
+                    result.setSuccessfull(true);
+                    result.addMessage("SUCCESS", "Sonuc basarili");
+                }catch(Exception e){
+                    result.setSuccessfull(false);
+                    result.addMessage("ERROR", "Hata : "+e.getMessage());
+                }
             } else {
                 result.setSuccessfull(false);
-                result.addMessage("wrongCaptcha", "Captcha Dogrulanamadi. Tekrar Deneyiniz.");
+                result.addMessage("ERROR", "Captcha Dogrulanamadi. Tekrar Deneyiniz.");
             }
             
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
@@ -72,11 +76,15 @@ public class UserController {
             String surname = request.getParameter("surname");
             String telNo = request.getParameter("telNo");
             
-            userDao.updateUser(userid, name, surname, telNo);
-
-            result.setSuccessfull(true);
-            result.addMessage("success", "Sonuc basarili.");
-                
+            try{
+                userDao.updateUser(userid, name, surname, telNo);
+                result.setSuccessfull(true);
+                result.addMessage("SUCCESS", "Sonuc basarili");
+            }catch(Exception e){
+                result.setSuccessfull(false);
+                result.addMessage("ERROR", "Hata : "+e.getMessage());
+            }
+            
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             
             modelAndView.addObject(JSONText, result.toJSONString());
@@ -90,11 +98,15 @@ public class UserController {
             RequestResult result = new RequestResult();
             String userid = request.getParameter("userid");
             
-            userDao.deleteUserById(userid);
-            
-            result.setSuccessfull(true);
-           result.addMessage("success", "Sonuc basarili.");
-                
+            try{
+                userDao.deleteUserById(userid);
+                result.setSuccessfull(true);
+                result.addMessage("SUCCESS", "Sonuc basarili");
+            }catch(Exception e){
+                result.setSuccessfull(false);
+                result.addMessage("ERROR", "Hata : "+e.getMessage());
+            }
+
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             
             modelAndView.addObject(JSONText, result.toJSONString());
@@ -106,14 +118,17 @@ public class UserController {
 		HttpServletResponse response) throws Exception {
             
             RequestResult result = new RequestResult();
+            try{
+                List <User> list = userDao.findAllUsers();
             
-            List <User> list = userDao.findAllUsers();
+                result.setResultList(list);
             
-            result.setResultList(list);
-            
-            result.setSuccessfull(true);
-            
-            //result.addMessage("ERROR", "Mongo DB Calismior");
+                result.setSuccessfull(true);
+                result.addMessage("SUCCESS", "Sonuc basarili");
+            }catch(Exception e){
+                result.setSuccessfull(false);
+                result.addMessage("ERROR", "Hata : "+e.getMessage());
+            }
             
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             

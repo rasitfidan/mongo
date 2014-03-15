@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class CaptchaProducer {
-	public static Captcha produce(int imageWidth , int imageHeight, int captchaLength) {
+	public  static synchronized Captcha produce(int imageWidth , int imageHeight, int captchaLength) {
 		Captcha captcha = new Captcha();
 		
 		BufferedImage captchaImage = new BufferedImage(imageWidth,imageHeight,BufferedImage.TYPE_4BYTE_ABGR);

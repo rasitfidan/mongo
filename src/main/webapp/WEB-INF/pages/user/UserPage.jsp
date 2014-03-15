@@ -1,4 +1,6 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <html>  
 <head>  
     <meta http-equiv="Pragma" content="no-cache">
@@ -9,7 +11,7 @@
     <script type="text/javascript" src="<c:url value="resources/js/jquery.js" />"></script>
     <script type="text/javascript" src="<c:url value="resources/js/jquery-ui.js" />"></script>
 
-    <title>Kullanici Sayfasi</title>  
+    <title>Kullanici Yonetimi Sayfasi</title>  
     <script>   
         $(document).ready(function(){
             $(document).ajaxStart(function(){
@@ -21,7 +23,7 @@
                 $(".loader").hide();
               //$("#wait").css("display","none");
             });
-
+            
             loadUsers();
         });
 
@@ -44,7 +46,7 @@
 
                 var uTableBody = uTable.tBodies[0];
                 //eski datasi tablodan cikar
-                uTableBody.remove();
+                uTable.removeChild(uTableBody);
 
                 uTableBody = document.createElement("TBODY");
 
@@ -170,14 +172,14 @@
 
 
                        if(errorMessages!==""){
-                           var dialogErrPane = document.getElementById("persistModalDialogErrorPane");
+                            var dialogErrPane = $( "#persistModalDialogErrorPane" );
 
-                           dialogErrPane.innerHTML= "<p>Asagidaki alanlar zorunludur</p>" +
+                            dialogErrPane.html("<p>Asagidaki alanlar zorunludur</p>" +
                                                     "<ul>"+
                                                         errorMessages+
-                                                    "</ul>";
-
-                            dialogErrPane.style.display="block";
+                                                    "</ul>");
+                            
+                            dialogErrPane.css("display","block");
 
                             $(this).height(380);
                        } else {
@@ -190,6 +192,14 @@
                                      if(reqResult.successfull){
                                          loadUsers();
                                          $( "#persistmodaldialog" ).dialog("close");
+                                     } else{
+                                         var dialogErrPane = $( "#persistModalDialogErrorPane" );
+
+                                        dialogErrPane.html(reqResult.messages[0].ERROR);
+
+                                        dialogErrPane.css("display","block");
+                                        
+                                        $( "#persistmodaldialog" ).height(280);
                                      }
                                  }
                              });
@@ -212,11 +222,13 @@
             
             changeCaptchaImage();
             
-            var dialogErrPane = document.getElementById("persistModalDialogErrorPane");
-                               
-            dialogErrPane.innerHTML= "";
+            var dialogErrPane = $( "#persistModalDialogErrorPane" );
+            
+            dialogErrPane.html("");
+            
+            dialogErrPane.css("display","block");
                                                     
-            dialogErrPane.style.display="none";
+            //dialogErrPane.style.display="none";
         }
         
         function deleteUser(m_id){
@@ -256,8 +268,7 @@
 </script>
 
 </head>  
-<body>  
-      
+<body>
     <center>  
         <div id="userListDiv">
             <table>
@@ -275,6 +286,13 @@
                                 </tr>
                              </thead>
                              <tbody>
+                               <tr>
+                                   <td>Isim</td>
+                                   <td>Soyisim</td>
+                                   <td>Telefon</td>
+                                   <td></td>
+                                   <td></td>
+                                </tr>
                              </tbody>
                         </table>
                     <td>
@@ -342,7 +360,7 @@
         <div id="deleteconfirm" title="Kullanici Silme" style="display:none;">
             <p></span>Kullaniciyi silmek istediginizden emin misiniz?</p>
         </div>
-        <div class="loader"></div>
+        <!--div class="loader"></div-->
         <!--div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div-->
     </center>  
 </body>  
