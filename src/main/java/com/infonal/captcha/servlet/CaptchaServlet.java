@@ -22,7 +22,7 @@ public class CaptchaServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
-          //gif tipi
+          //gif tipi diyelim
           response.setContentType("image/gif");
           
           OutputStream out = response.getOutputStream();
@@ -31,12 +31,15 @@ public class CaptchaServlet extends HttpServlet {
           
           HttpSession session = request.getSession();
           
-          //Karsilastirmak uzere session 'a ekleniyor
+          //Karsilastirma yapmak uzere session 'a ekleniyor
           session.setAttribute("captcha", captcha.getCaptchaString());
           
           ImageIO.write(captcha.getCaptchaImage(), "gif",out);
           
-          out.close();System.out.println("ok...captcha");
+          out.close();
       }
-    
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
