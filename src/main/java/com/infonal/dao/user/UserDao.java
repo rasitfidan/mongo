@@ -10,6 +10,8 @@ import com.infonal.model.user.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,6 +32,26 @@ public class UserDao {
         
     }
 
+    public boolean updateUser(String uid,String name,String surname,String telNo){
+        Query query = new Query();
+	
+        query.addCriteria(Criteria.where("id").is(uid));
+	query.fields().include("id");
+        
+        User user = mongoOperations.findOne(query, User.class);
+	
+        user.setName(name);
+
+        user.setSurname(surname);
+
+        user.setTelNo(telNo);
+ 
+        mongoOperations.save(user);
+        
+        return true;
+    }
+    
+    
     public User findUserById(String id){
         checkDB();
 

@@ -56,5 +56,6 @@ public class CaptchaJUnitTest {
             ImageIO.write(c.getCaptchaImage(), "gif", new FileOutputStream("D:\\test.gif"));
 
             System.out.println("Captcha--"+c.getCaptchaString());
+            
     }
 }
