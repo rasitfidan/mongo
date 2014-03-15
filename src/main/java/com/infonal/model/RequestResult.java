@@ -51,6 +51,10 @@ public class RequestResult implements JSONObject{
         this.resultList = resultList;
     }
     
+    /**
+     * Third party json marshaller kullanilabilir.
+     * @return 
+     */
     @Override
     public String toJSONString(){
         StringBuilder JSONBuilder = new StringBuilder();
