@@ -125,10 +125,11 @@
         }
 
         function newOrUpdateUserPopupOpen(m_id,m_name,m_surname,m_telNo) {
-            
             var action = null;
             var winTitle = null;
             var m_captcha = null;
+            
+            var height = 400;
             //update
             if(m_id!==null && m_id !=="") {
                 action = "user/update";
@@ -141,7 +142,7 @@
             setNewValues(m_id,m_name,m_surname,m_telNo);
             
             $( "#persistmodaldialog" ).dialog({
-                height: 400,
+                height: height,
                 width: 500,
                 modal: true,
                 title : winTitle,
@@ -167,7 +168,6 @@
                           errorMessages+="<li>Captcha</li>"; 
                        }
 
-
                        if(errorMessages!==""){
                             var dialogErrPane = $( "#persistModalDialogErrorPane" );
 
@@ -177,8 +177,8 @@
                                                     "</ul>");
                             
                             dialogErrPane.css("display","block");
-
-                            $(this).height(380);
+                            //goz karari
+                            $(this).height(height-50);
                        } else {
                             $.ajax({
                                  type: "POST",
@@ -300,9 +300,7 @@
             </table>
         </div>
         <div id="persistmodaldialog" style="display:none;">
-            <div id="persistModalDialogErrorPane" style="display:none;" class="warning">
-            
-            </div>
+            <div id="persistModalDialogErrorPane" style="display:none;" class="warning"></div>
             <table>
                 <tr>
                     <td>
@@ -332,7 +330,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Asagida ne yaziyor?
+                        <label for="captcha">Captcha</label>
                     </td>
                     <td>
                         <input type="text" id="captcha" name="captcha" required="true"/>
@@ -355,7 +353,7 @@
         <div id="deleteconfirm" title="Kullanici Silme" style="display:none;">
             <p></span>Kullaniciyi silmek istediginizden emin misiniz?</p>
         </div>
-        <!--div class="loader"></div-->
+        <div class="loader"></div>
         <!--div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div-->
     </center>  
 </body>  
