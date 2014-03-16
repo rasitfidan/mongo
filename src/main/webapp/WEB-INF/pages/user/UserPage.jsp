@@ -1,6 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <html>  
 <head>  
     <meta http-equiv="Pragma" content="no-cache">
@@ -45,7 +43,7 @@
                 var uTable = document.getElementById("userTable");
 
                 var uTableBody = uTable.tBodies[0];
-                //eski datasi tablodan cikar
+                //eski datayi tablodan cikar
                 uTable.removeChild(uTableBody);
 
                 uTableBody = document.createElement("TBODY");
@@ -119,7 +117,6 @@
                 }
                 //Yeni datayi tabloya ekle
                 uTable.appendChild(uTableBody);
-                //{"successfull":true,"messages":[],"resultList":[{"id":"5321d120504c26ea8e362188","name":"rasit","surname":"Fidan2","telNo":"02122833034"}]}
             } else {
                 var error = reqResult.messages[0].ERROR;
 
@@ -226,9 +223,7 @@
             
             dialogErrPane.html("");
             
-            dialogErrPane.css("display","block");
-                                                    
-            //dialogErrPane.style.display="none";
+            dialogErrPane.css("display","none");
         }
         
         function deleteUser(m_id){
@@ -261,7 +256,7 @@
         }
         
         function changeCaptchaImage(){
-            document.getElementById("captchaDiv").innerHTML="<img id='captchaImg' src='<c:url value="captcha?" />"+Math.random()+"' height='50' width='100'/>";
+            $( "#captchaDiv").html("<img id='captchaImg' src='<c:url value="captcha?" />"+Math.random()+"' height='50' width='100'/>");
         }
         
         
