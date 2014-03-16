@@ -130,27 +130,41 @@
             var m_captcha = null;
             
             var height = 400;
+            
+            var dialogType = "create";
+            
             //update
             if(m_id!==null && m_id !=="") {
                 action = "user/update";
                 winTitle = "Kullanici Guncelleme";
+                
+                dialogType = "update";
+                
+                height = 270;
             } else {
                 action = "user/create";
                 winTitle = "Kullanici Tanimlama";
+                
+                dialogType = "create";
+                
+                height = 400;
             }
+            
+            var dialogName = "#"+dialogType+"dialog";
+            var dialogErrorPaneName = "#"+dialogType+"DialogErrorPane";
             
             setNewValues(m_id,m_name,m_surname,m_telNo);
             
-            $( "#persistmodaldialog" ).dialog({
+            $( dialogName ).dialog({
                 height: height,
                 width: 500,
                 modal: true,
                 title : winTitle,
                 buttons: {
                     "Kaydet": function() {      
-                        m_name = $('#name').val();
-                        m_surname = $('#surname').val();
-                        m_telNo = $('#telNo').val();
+                        m_name = $('#'+dialogType+'name').val();
+                        m_surname = $('#'+dialogType+'surname').val();
+                        m_telNo = $('#'+dialogType+'telNo').val();
 
                         m_captcha = $('#captcha').val();
 
@@ -169,7 +183,7 @@
                        }
 
                        if(errorMessages!==""){
-                            var dialogErrPane = $( "#persistModalDialogErrorPane" );
+                            var dialogErrPane = $( dialogErrorPaneName );
 
                             dialogErrPane.html("<p>Asagidaki alanlar zorunludur</p>" +
                                                     "<ul>"+
@@ -188,15 +202,15 @@
                                  success : function (reqResult) {
                                      if(reqResult.successfull){
                                          loadUsers();
-                                         $( "#persistmodaldialog" ).dialog("close");
+                                         $( dialogName ).dialog("close");
                                      } else{
-                                         var dialogErrPane = $( "#persistModalDialogErrorPane" );
+                                         var dialogErrPane = $( dialogErrorPaneName );
 
                                         dialogErrPane.html(reqResult.messages[0].ERROR);
 
                                         dialogErrPane.css("display","block");
                                         
-                                        $( "#persistmodaldialog" ).height(280);
+                                        $( dialogName ).height(height-50);
                                      }
                                  }
                              });
@@ -210,16 +224,24 @@
         }
         
         function setNewValues(m_id,m_name,m_surname,m_telNo) {
+            var dialogType="create";
+            //update
+            if(m_id!==null && m_id !=="") {
+                dialogType="update";
+            } else {
+                dialogType="create";
+                
+                $('#captcha').val("");
+            
+                changeCaptchaImage();
+            }
+            
             $('#userId').val(m_id);
-            $('#name').val(m_name);
-            $('#surname').val(m_surname);
-            $('#telNo').val(m_telNo);
+            $('#'+dialogType+'name').val(m_name);
+            $('#'+dialogType+'surname').val(m_surname);
+            $('#'+dialogType+'telNo').val(m_telNo);
             
-            $('#captcha').val("");
-            
-            changeCaptchaImage();
-            
-            var dialogErrPane = $( "#persistModalDialogErrorPane" );
+            var dialogErrPane = $( "#"+dialogType+"DialogErrorPane" );
             
             dialogErrPane.html("");
             
@@ -299,16 +321,15 @@
                 </tr>            
             </table>
         </div>
-        <div id="persistmodaldialog" style="display:none;">
-            <div id="persistModalDialogErrorPane" style="display:none;" class="warning"></div>
+        <div id="createdialog" style="display:none;">
+            <div id="createDialogErrorPane" style="display:none;" class="warning"></div>
             <table>
                 <tr>
                     <td>
                         <label for="name">Isim</label>
                     </td>
                     <td>
-                        <input type="hidden" id="userId" name="userId"/>
-                        <input type="text" id="name" name="name" required="true"/>
+                        <input type="text" id="createname" name="name" required="true"/>
                     </td>
                 </tr>
                 
@@ -317,7 +338,7 @@
                         <label for="surname">Soyisim</label>                        
                     </td>
                     <td>
-                        <input type="text" id="surname" name="surname" required="true"/>
+                        <input type="text" id="createsurname" name="surname" required="true"/>
                     </td>
                 </tr>
                 <tr>
@@ -325,7 +346,7 @@
                         <label for="telNo">Telefon</label>
                     </td>
                     <td>
-                        <input type="text" id="telNo" name="telNo" pattern="[0-9]{11}"/>
+                        <input type="text" id="createtelNo" name="telNo" onkeyup="this.value = this.value.replace(/^(\d{3})(\d{3})(\d{2})(\d{2})$/, '($1) $2 $3 $4')"/>
                     </td>
                 </tr>
                 <tr>
@@ -346,6 +367,37 @@
                                 <td><input type="image" src="resources/img/refreshIcon.png" onclick="changeCaptchaImage();"  width="40" height="32"/></td>
                             </tr>
                         </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="updatedialog" style="display:none;">
+            <div id="updateDialogErrorPane" style="display:none;" class="warning"></div>
+            <table>
+                <tr>
+                    <td>
+                        <label for="name">Isim</label>
+                    </td>
+                    <td>
+                        <input type="hidden" id="userId" name="userId"/>
+                        <input type="text" id="updatename" name="name" required="true"/>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <label for="surname">Soyisim</label>                        
+                    </td>
+                    <td>
+                        <input type="text" id="updatesurname" name="surname" required="true"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="telNo">Telefon</label>
+                    </td>
+                    <td>
+                        <input type="text" id="updatetelNo" name="telNo" onkeyup="this.value = this.value.replace(/^(\d{3})(\d{3})(\d{2})(\d{2})$/, '($1) $2 $3 $4')"/>
                     </td>
                 </tr>
             </table>
