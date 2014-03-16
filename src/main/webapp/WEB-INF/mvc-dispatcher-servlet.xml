@@ -27,8 +27,7 @@
         <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 
         <bean  
-            class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-            <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="prefix">  
                 <value>/WEB-INF/pages/</value>  
             </property>  
