@@ -24,14 +24,14 @@ import org.springframework.web.servlet.ModelAndView;
   
 @Controller  
 public class UserController {  
-    private static final String JSONText = "JSONText";
+    private static final String JSON = "JSONText";
 
         @Autowired
         private UserDao userDao;
         
 	@RequestMapping("/user/create")
-	public ModelAndView add(HttpServletRequest request,
-		HttpServletResponse response){
+	public ModelAndView create(HttpServletRequest request,
+		HttpServletResponse response) {
             RequestResult result = new RequestResult();
             
             String name = request.getParameter("name");
@@ -39,10 +39,12 @@ public class UserController {
             String telNo = request.getParameter("telNo");
             String captchaParam = request.getParameter("captcha");
             
+            //session'da tutulan captcha'yi al
             HttpSession session = request.getSession();
             
             String captchaValue = (String) session.getAttribute("captcha");
             
+            //captcha karsilastirma
             if(captchaParam.equals(captchaValue)){
                 User user = new User(name,surname,telNo);
                 try{
@@ -60,14 +62,14 @@ public class UserController {
             
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             
-            modelAndView.addObject(JSONText, result.toJSONString());
+            modelAndView.addObject(UserController.JSON, result.toJSONString());
             
             return modelAndView;
  
 	}
  	@RequestMapping("/user/update")
 	public ModelAndView update(HttpServletRequest request,
-		HttpServletResponse response) throws Exception {
+		HttpServletResponse response) {
  
             RequestResult result = new RequestResult();
             
@@ -87,14 +89,14 @@ public class UserController {
             
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             
-            modelAndView.addObject(JSONText, result.toJSONString());
+            modelAndView.addObject(UserController.JSON, result.toJSONString());
             
             return modelAndView;
 	}
  
 	@RequestMapping("/user/delete")
 	public ModelAndView delete(HttpServletRequest request,
-		HttpServletResponse response) throws Exception {
+		HttpServletResponse response) {
             RequestResult result = new RequestResult();
             String userid = request.getParameter("userid");
             
@@ -109,13 +111,13 @@ public class UserController {
 
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             
-            modelAndView.addObject(JSONText, result.toJSONString());
+            modelAndView.addObject(UserController.JSON, result.toJSONString());
             return modelAndView;
 	}
  
 	@RequestMapping("/user/list")
 	public ModelAndView list(HttpServletRequest request,
-		HttpServletResponse response) throws Exception {
+		HttpServletResponse response) {
             
             RequestResult result = new RequestResult();
             try{
@@ -132,14 +134,14 @@ public class UserController {
             
             ModelAndView modelAndView = new ModelAndView("ajax/AjaxResult");
             
-            modelAndView.addObject(JSONText, result.toJSONString());
+            modelAndView.addObject(UserController.JSON, result.toJSONString());
             
             return modelAndView;
  
 	}
         
         @RequestMapping("/UserPage")
-	public ModelAndView redirectToUserPage() throws Exception { 
+	public ModelAndView redirectToUserPage() { 
 		return new ModelAndView("user/UserPage");
  
 	}
