@@ -25,9 +25,9 @@
             loadUsers();
         });
 
-        //Math.Random ;Cunku internet explorer onceki json 'u cacheliyor
         function loadUsers(){
             $.ajax({
+                cache: false,
                 type: "GET",
                 dataType: "json",
                 url: "user/list?"+Math.random(),
