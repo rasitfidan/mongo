@@ -64,6 +64,8 @@ public class RequestResult implements JSONObject{
         JSONBuilder.append(":");
         JSONBuilder.append(this.isSuccessfull());
         JSONBuilder.append(",");
+        
+        //append messages through loop
         JSONBuilder.append("\"messages\"");
         JSONBuilder.append(":");
         JSONBuilder.append("[");
@@ -83,13 +85,16 @@ public class RequestResult implements JSONObject{
             
             JSONBuilder.append(",");
         }
-        
+        //the last comma has to be deleted
         if(JSONBuilder.toString().endsWith(",")){
             JSONBuilder.deleteCharAt(JSONBuilder.length()-1);
         }
         JSONBuilder.append("]");
+        //end of messages
         
         JSONBuilder.append(",");
+        
+        //result list , if there are any list outcomes
         JSONBuilder.append("\"resultList\"");
         JSONBuilder.append(":");
         JSONBuilder.append("[");
@@ -102,7 +107,7 @@ public class RequestResult implements JSONObject{
         if(JSONBuilder.toString().endsWith(",")){
             JSONBuilder.deleteCharAt(JSONBuilder.length()-1);
         }
-        
+        //end of resultlist append
         JSONBuilder.append("]");
         JSONBuilder.append("}");
         
