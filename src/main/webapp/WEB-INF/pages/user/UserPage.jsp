@@ -25,11 +25,12 @@
             loadUsers();
         });
 
+        //Math.Random ;Cunku internet explorer onceki json 'u cacheliyor
         function loadUsers(){
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "user/list",
+                url: "user/list?"+Math.random(),
                 success: function (reqResult) {
                     decorateUserTable(reqResult);
                 }
@@ -41,82 +42,28 @@
                 var userResultList = reqResult.resultList;
 
                 var uTable = document.getElementById("userTable");
-
-                var uTableBody = uTable.tBodies[0];
-                //eski datayi tablodan cikar
-                uTable.removeChild(uTableBody);
-
-                uTableBody = document.createElement("TBODY");
-
+                //Onceki tablo datayi sil. 0. satiri silmiyoruz cunku o satir header satiri
+                for(var j=1;j<uTable.rows.length;){
+                    uTable.deleteRow(1);
+                }
+                
                 for(var i=0 ; i<userResultList.length; i++){
                     var user = userResultList[i];
 
-                    var tRow = document.createElement("TR");
+                    var tRow = uTable.insertRow(uTable.rows.length);
 
-                    var td1 = document.createElement("TD");
-
-                    td1.appendChild(document.createTextNode(user.name));
-
-                    tRow.appendChild(td1);
-
-                    var td2 = document.createElement("TD");
-
-                    td2.appendChild(document.createTextNode(user.surname));
-
-                    tRow.appendChild(td2);
-
-                    var td3 = document.createElement("TD");
-
-                    td3.appendChild(document.createTextNode(user.telNo));
-
-                    tRow.appendChild(td3);
-
-                    //Buttonlar
-                    var td4 = document.createElement("TD");
-
-                    var buttonUpdate = document.createElement("INPUT");
-
-                    buttonUpdate.setAttribute("type","image");
+                    var cell1 = tRow.insertCell(0);
+                    var cell2 = tRow.insertCell(1);
+                    var cell3 = tRow.insertCell(2);
+                    var cell4 = tRow.insertCell(3);
+                    var cell5 = tRow.insertCell(4);
                     
-                    buttonUpdate.setAttribute("alt","Guncelle");
-                    
-                    buttonUpdate.setAttribute("src","resources/img/edit.png");
-
-                    buttonUpdate.setAttribute("onclick","newOrUpdateUserPopupOpen('"+user.id+"','"+user.name+"','"+user.surname+"','"+user.telNo+"');");
-
-                    buttonUpdate.setAttribute("width","30");
-                    
-                    buttonUpdate.setAttribute("height","30");
-                    
-                    td4.appendChild(buttonUpdate);
-
-                    tRow.appendChild(td4);
-
-                    var td5 = document.createElement("TD");
-
-                    var buttonDelete = document.createElement("INPUT");
-
-                    buttonDelete.setAttribute("type","image");
-                    
-                    buttonDelete.setAttribute("alt","Sil");
-                    
-                    buttonDelete.setAttribute("src","resources/img/delete.png");
-
-                    buttonDelete.setAttribute("onclick","deleteUser('"+user.id+"');");
-
-                    buttonDelete.setAttribute("width","25");
-                    
-                    buttonDelete.setAttribute("height","25");
-                    
-                    td5.appendChild(buttonDelete);
-
-                    tRow.appendChild(td5);
-
-
-                    uTableBody.appendChild(tRow);
+                    cell1.innerHTML = user.name;
+                    cell2.innerHTML = user.surname;
+                    cell3.innerHTML = user.telNo;
+                    cell4.innerHTML = "<input type=\"image\" src=\"resources/img/edit.png\" onclick=\"newOrUpdateUserPopupOpen('"+user.id+"','"+user.name+"','"+user.surname+"','"+user.telNo+"');\" width=\"30\" height=\"30\"/>";
+                    cell5.innerHTML = "<input type=\"image\" src=\"resources/img/delete.png\" onclick=\"deleteUser('"+user.id+"');\" width=\"25\" height=\"25\"/>";
                 }
-                //Yeni datayi tabloya ekle
-                uTable.appendChild(uTableBody);
             } else {
                 var error = reqResult.messages[0].ERROR;
 
