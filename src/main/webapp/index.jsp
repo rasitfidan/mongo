@@ -1,14 +1,17 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<fmt:setLocale value='tr_TR'/>
+<fmt:setBundle basename='com.infonal.resource.App'/>
+
 <html>  
 <head>
-<title>Infonal Project</title>
-<script type="text/javascript" src="<c:url value="resources/js/jquery-2.1.0.min.js" />"></script>
+<title>Infonal Projesi</title>
 </head>  
 <body>  
       
     <center>
         <h4>
-            <a href="UserPage">Kullanici Yonetimi</a>
+            <a href="UserPage"><fmt:message key='user.pagetitle'/></a>
         </h4>  
     </center>  
 </body>  
