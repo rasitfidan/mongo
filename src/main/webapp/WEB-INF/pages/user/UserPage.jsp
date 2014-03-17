@@ -2,7 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <fmt:setLocale value='tr_TR'/>
-<fmt:setBundle basename='com.infonal.resource.App'/>
+<fmt:setBundle basename='com.infonal.resources.App'/>
 
 <html>  
 <head>  
