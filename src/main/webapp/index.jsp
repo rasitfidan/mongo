@@ -5,7 +5,7 @@
 
 <html>  
 <head>
-<title>Infonal Projesi</title>
+<title><fmt:message key='project.title'/></title>
 </head>  
 <body>  
       
