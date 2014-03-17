@@ -1,15 +1,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<fmt:setLocale value='tr_TR'/>
+<fmt:setBundle basename='com.infonal.resource.App'/>
+
 <html>  
 <head>  
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    
     <link rel="stylesheet" href="<c:url value="resources/css/jquery-ui.css" />">
     <link rel="stylesheet" href="<c:url value="resources/css/style.css" />">
     <script type="text/javascript" src="<c:url value="resources/js/jquery.js" />"></script>
     <script type="text/javascript" src="<c:url value="resources/js/jquery-ui.js" />"></script>
 
-    <title>Kullanici Yonetimi Sayfasi</title>  
+    <title><fmt:message key='user.title'/></title>  
     <script>   
         $(document).ready(function(){
             $(document).ajaxStart(function(){
@@ -83,14 +90,14 @@
             //update
             if(m_id!==null && m_id !=="") {
                 action = "user/update";
-                winTitle = "Kullanici Guncelleme";
+                winTitle = $('#updatedialogtitle').val();
                 
                 dialogType = "update";
                 
                 height = 270;
             } else {
                 action = "user/create";
-                winTitle = "Kullanici Tanimlama";
+                winTitle = $('#createdialogtitle').val();
                 
                 dialogType = "create";
                 
@@ -108,7 +115,7 @@
                 modal: true,
                 title : winTitle,
                 buttons: {
-                    "Kaydet": function() {      
+                    "<fmt:message key='user.savebuttonlabel'/>": function() {      
                         m_name = $('#'+dialogType+'name').val();
                         m_surname = $('#'+dialogType+'surname').val();
                         m_telNo = $('#'+dialogType+'telNo').val();
@@ -118,21 +125,21 @@
                        var errorMessages = "";
 
                        if(m_name==="") {
-                          errorMessages+="<li>Isim</li>"; 
+                          errorMessages+="<li><fmt:message key='user.page.nameLabel'/></li>"; 
                        }
 
                        if(m_surname==="") {
-                          errorMessages+="<li>Soyisim</li>"; 
+                          errorMessages+="<li><fmt:message key='user.page.surnameLabel'/></li>"; 
                        }
 
                        if(m_captcha==="" && (m_id===null || m_id ==="")) {
-                          errorMessages+="<li>Captcha</li>"; 
+                          errorMessages+="<li><fmt:message key='user.dialog.captchaLabel'/></li>"; 
                        }
 
                        if(errorMessages!==""){
                             var dialogErrPane = $( dialogErrorPaneName );
 
-                            dialogErrPane.html("<p>Asagidaki alanlar zorunludur</p>" +
+                            dialogErrPane.html("<p><fmt:message key='user.dialog.errorPaneMandatoryFields'/></p>" +
                                                     "<ul>"+
                                                         errorMessages+
                                                     "</ul>");
@@ -163,7 +170,7 @@
                              });
                         }
                     },
-                    "Iptal": function() {
+                    "Iptal" : function() {
                         $( this ).dialog( "close" );
                     }
                 }
@@ -196,14 +203,16 @@
         }
         
         function deleteUser(m_id){
+            var cancelbuttonlabel = $( "#cancelbuttonlabel").val();
+            
             $( "#deleteconfirm" ).dialog({
                 resizable: false,
                 height:200,
                 width: 450,
                 modal: true,
-                title: "Kullanici Silme",
+                title: $('#deletedialogtitle').val(),
                 buttons: {
-                    "Evet,Sil!": function() {
+                    "<fmt:message key='user.deletedialog.yesbuttonlabel'/>": function() {
                         $.ajax({
                             type: "POST",
                             dataType: "json",
@@ -217,7 +226,7 @@
                             }
                         });
                     },
-                    "Iptal": function() {
+                    "Iptal" : function() {
                         $( this ).dialog( "close" );
                     }
                 }
@@ -233,27 +242,32 @@
 
 </head>  
 <body>
+    <!--jquery window title gecerken utf8 encoding sacmaliyor-->
+    <input type="hidden" id="createdialogtitle" name="createdialogtitle" value="<fmt:message key='user.createdialog.title'/>"/>
+    <input type="hidden" id="updatedialogtitle" name="updatedialogtitle" value="<fmt:message key='user.updatedialog.title'/>"/>
+    <input type="hidden" id="deletedialogtitle" name="deletedialogtitle" value="<fmt:message key='user.deletedialog.title'/>"/>
+    
     <center>  
         <div id="userListDiv">
             <table>
-                <caption>Kullanici Yonetimi</caption>
+                <caption><fmt:message key='user.pagetitle'/></caption>
                 <tr>            
                     <td>    
                         <table id="userTable">
                              <thead>
                                 <tr>
-                                   <th>Isim</th>
-                                   <th>Soyisim</th>
-                                   <th>Telefon</th>
+                                   <th><fmt:message key='user.page.nameLabel.upper'/></th>
+                                   <th><fmt:message key='user.page.surnameLabel.upper'/></th>
+                                   <th><fmt:message key='user.page.phoneLabel'/></th>
                                    <th></th>
                                    <th></th>
                                 </tr>
                              </thead>
                              <tbody>
                                <tr>
-                                   <td>Isim</td>
-                                   <td>Soyisim</td>
-                                   <td>Telefon</td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
                                    <td></td>
                                    <td></td>
                                 </tr>
@@ -263,7 +277,7 @@
                 </tr>
                 <tr>            
                     <td>
-                        <button onclick="newOrUpdateUserPopupOpen(null,null,null,null)">Yeni Kullanici</button> 
+                        <button onclick="newOrUpdateUserPopupOpen(null,null,null,null)"><fmt:message key='user.action.newuserLabel'/></button> 
                     <td>
                 </tr>            
             </table>
@@ -273,7 +287,7 @@
             <table>
                 <tr>
                     <td>
-                        <label for="name">Isim</label>
+                        <label for="name"><fmt:message key='user.page.nameLabel'/></label>
                     </td>
                     <td>
                         <input type="text" id="createname" name="name" required="true"/>
@@ -282,7 +296,7 @@
                 
                 <tr>
                     <td>
-                        <label for="surname">Soyisim</label>                        
+                        <label for="surname"><fmt:message key='user.page.surnameLabel'/></label>                        
                     </td>
                     <td>
                         <input type="text" id="createsurname" name="surname" required="true"/>
@@ -290,7 +304,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="telNo">Telefon</label>
+                        <label for="telNo"><fmt:message key='user.page.phoneLabel'/></label>
                     </td>
                     <td>
                         <input type="text" id="createtelNo" name="telNo" onkeyup="this.value = this.value.replace(/^(\d{3})(\d{3})(\d{2})(\d{2})$/, '($1) $2 $3 $4')"/>
@@ -298,7 +312,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="captcha">Captcha</label>
+                        <label for="captcha"><fmt:message key='user.dialog.captchaLabel'/></label>
                     </td>
                     <td>
                         <input type="text" id="captcha" name="captcha" required="true"/>
@@ -323,7 +337,7 @@
             <table>
                 <tr>
                     <td>
-                        <label for="name">Isim</label>
+                        <label for="name"><fmt:message key='user.page.nameLabel'/></label>
                     </td>
                     <td>
                         <input type="hidden" id="userId" name="userId"/>
@@ -333,7 +347,7 @@
                 
                 <tr>
                     <td>
-                        <label for="surname">Soyisim</label>                        
+                        <label for="surname"><fmt:message key='user.page.surnameLabel'/></label>                        
                     </td>
                     <td>
                         <input type="text" id="updatesurname" name="surname" required="true"/>
@@ -341,7 +355,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="telNo">Telefon</label>
+                        <label for="telNo"><fmt:message key='user.page.phoneLabel'/></label>
                     </td>
                     <td>
                         <input type="text" id="updatetelNo" name="telNo" onkeyup="this.value = this.value.replace(/^(\d{3})(\d{3})(\d{2})(\d{2})$/, '($1) $2 $3 $4')"/>
@@ -349,8 +363,8 @@
                 </tr>
             </table>
         </div>
-        <div id="deleteconfirm" title="Kullanici Silme" style="display:none;">
-            <p></span>Kullaniciyi silmek istediginizden emin misiniz?</p>
+        <div id="deleteconfirm" title="<fmt:message key='user.deletedialog.title'/>" style="display:none;">
+            <p></span><fmt:message key='user.deletedialog.sure'/></p>
         </div>
         <div class="loader"></div>
         <!--div id="wait" style="display:none;width:105px;height:150px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='<c:url value="resources/img/ajax-loader1.gif" />' width="100" height="100" /><br>Loading..</div-->
