@@ -1,4 +1,4 @@
-INFONAL_CHALLANGE
+MONGODB_SAMPLE
 =================
 
 Homework
