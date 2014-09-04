@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.infonal</groupId>
-    <artifactId>INFONAL_CHALLANGE</artifactId>
+    <artifactId>MONGODB_SAMPLE</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <url>http://maven.apache.org</url>
-    <name>INFONAL_CHALLANGE</name>
+    <name>MONGODB_SAMPLE</name>
 
     <properties>
         <spring.version>3.2.2.RELEASE</spring.version>
