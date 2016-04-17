@@ -1,4 +1,4 @@
-MONGODB_SAMPLE
+MongoDBSample
 =================
 
 Homework
