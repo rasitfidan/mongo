@@ -8,7 +8,7 @@
 <title><fmt:message key='project.title'/></title>
 </head>  
 <body>  
-    TES
+    TEST 1234
     <center>
         <h4>
             <a href="UserPage"><fmt:message key='user.pagetitle'/></a>
